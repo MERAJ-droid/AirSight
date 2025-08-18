@@ -1,0 +1,23 @@
+{
+  "analysis_timestamp": "2025-08-14T20:27:48.593563",
+  "num_test_images": 9,
+  "models_loaded": {
+    "single_model": true,
+    "multi_model": true,
+    "source_predictor": true
+  },
+  "ensemble_methods": [
+    "average",
+    "weighted",
+    "conservative"
+  ],
+  "pollutants_predicted": [
+    "PM2.5",
+    "PM10",
+    "NO2",
+    "SO2",
+    "CO",
+    "O3",
+    "AQI"
+  ]
+}

@@ -1,0 +1,7 @@
+base_model,ensemble_model,mae,correlation,avg_difference
+single_model,average_ensemble,69.20265064900349,1.0,69.20265064900349
+single_model,weighted_ensemble,83.04318077880419,1.0,83.04318077880419
+single_model,conservative_ensemble,138.40530129800698,,138.40530129800698
+multi_model,average_ensemble,69.20265064900349,,69.20265064900349
+multi_model,weighted_ensemble,55.3621205192028,,55.3621205192028
+multi_model,conservative_ensemble,0.0,,0.0
