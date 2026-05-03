@@ -44,7 +44,7 @@ Point it at an image of the sky or city skyline and it returns predicted concent
 |---|---|---|
 | Drag-and-drop any pollution image | AQI gauge + 7 pollutant cards | RAG-grounded advisory with source citations |
 
-**Try it live:** [airsight.vercel.app](https://airsight.vercel.app)
+**Try it live:** [airsightv2.vercel.app](https://airsight.vercel.app)
 
 ---
 
