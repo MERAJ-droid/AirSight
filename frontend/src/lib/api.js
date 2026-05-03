@@ -1,6 +1,9 @@
 // src/lib/api.js  — thin wrapper around the AirSight FastAPI backend
 
-const BASE = "http://localhost:8000";
+// In development: falls back to localhost:8000 (local uvicorn)
+// In production:  VITE_API_BASE_URL is set to the HF Space URL via .env.production
+const BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+
 
 /**
  * POST /predict  — CNN only, returns predictions fast

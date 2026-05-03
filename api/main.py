@@ -28,6 +28,12 @@ from pathlib import Path
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 warnings.filterwarnings("ignore")
 
+# ── Rate limiting ─────────────────────────────────────────────────────────────
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from starlette.requests import Request
+
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import mixed_precision
@@ -35,6 +41,7 @@ mixed_precision.set_global_policy("mixed_float16")
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from api.startup import download_artifacts_if_needed
 
 # ── Local imports ─────────────────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -163,6 +170,10 @@ async def lifespan(app: FastAPI):
     """
     print("\n🛰  AirSight API  ·  Starting up ...")
 
+    # Download model artifacts from private HF Hub repo (HF Spaces deployment).
+    # No-op when running locally (artifacts/ already exists).
+    download_artifacts_if_needed(REPO_ROOT / "artifacts")
+
     # CNN model
     print(f"  ⚙  Loading model  →  {MODEL_PATH.name}")
     app.state.model = tf.keras.models.load_model(str(MODEL_PATH))
@@ -209,10 +220,20 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow all origins so the Phase 4 frontend can call the API freely
+# ── Rate limiter ─────────────────────────────────────────────────────────────
+# Per-IP limits prevent Gemini API quota abuse from the public HF Space.
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# ── CORS ──────────────────────────────────────────────────────────────────────
+# Locked to the production Vercel domain + local dev. No wildcard in production.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://airsight.vercel.app",   # production frontend
+        "http://localhost:5173",          # local Vite dev server
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -241,7 +262,8 @@ async def health():
     summary="CNN inference only  (fast)",
     tags=["Inference"],
 )
-async def predict(file: UploadFile = File(..., description="Air pollution image (JPG/PNG)")):
+@limiter.limit("10/minute")
+async def predict(request: Request, file: UploadFile = File(..., description="Air pollution image (JPG/PNG)")):
     """
     Upload an image → returns CNN pollutant predictions in real-world units.
 
@@ -271,7 +293,8 @@ async def predict(file: UploadFile = File(..., description="Air pollution image 
     summary="Full pipeline: CNN + RAG + Gemini advisory",
     tags=["Inference"],
 )
-async def analyze(file: UploadFile = File(..., description="Air pollution image (JPG/PNG)")):
+@limiter.limit("5/minute")
+async def analyze(request: Request, file: UploadFile = File(..., description="Air pollution image (JPG/PNG)")):
     """
     Upload an image → returns pollutant predictions **and** an AI health advisory.
 
@@ -305,7 +328,8 @@ async def analyze(file: UploadFile = File(..., description="Air pollution image 
     summary="Ask a question about air quality (RAG-grounded)",
     tags=["Chat"],
 )
-async def chat(body: ChatRequest):
+@limiter.limit("5/minute")
+async def chat(request: Request, body: ChatRequest):
     """
     Ask any air quality question — answered using the AirSight knowledge base.
 
