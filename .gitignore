@@ -50,8 +50,8 @@ output.jpg
 src/rag/documents/*.pdf
 
 # ── Planning & internal docs (not for public repo) ───────
-AIRSIGHT_STATUS.md
-FURTHER_PLANS.md
+# All planning, status, and deployment notes live in DEV_NOTES/
+DEV_NOTES/
 
 # ── OS noise ────────────────────────────────────────────
 .DS_Store
