@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html, body, #root { height: 100%; margin: 0; }
+  body {
+    background-color: #060b18;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0f1e; }
+  ::-webkit-scrollbar-thumb { background: #263358; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3b4f80; }
+}
+
+@layer components {
+  /* Glassmorphism card */
+  .glass {
+    @apply bg-navy-800/60 backdrop-blur-sm border border-white/5 rounded-2xl;
+  }
+
+  /* AQI gauge circle */
+  .gauge-ring {
+    transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1),
+                stroke 0.6s ease;
+  }
+
+  /* Shimmer skeleton */
+  .skeleton {
+    @apply bg-navy-700 rounded-lg animate-pulse;
+  }
+
+  /* Pill badge */
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  /* Chat bubble */
+  .bubble-user {
+    @apply bg-blue-600/30 border border-blue-500/20 rounded-2xl rounded-br-sm px-4 py-3 max-w-[85%] ml-auto text-sm;
+  }
+  .bubble-ai {
+    @apply bg-navy-700/70 border border-white/5 rounded-2xl rounded-bl-sm px-4 py-3 max-w-[90%] text-sm;
+  }
+}
