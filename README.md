@@ -16,7 +16,7 @@ app_port: 7860
 
 **Upload a photo → Get pollutant predictions → Receive a health advisory**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-airsight.vercel.app-6366f1?style=for-the-badge&logo=vercel)](https://airsight.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-airsight.vercel.app-6366f1?style=for-the-badge&logo=vercel)](https://airsightv2.vercel.app)
 [![API](https://img.shields.io/badge/API-HuggingFace%20Spaces-ffd21e?style=for-the-badge&logo=huggingface)](https://gh0stfreak-airsight.hf.space/docs)
 [![GitHub](https://img.shields.io/badge/GitHub-MERAJ--droid%2FAirSight-181717?style=for-the-badge&logo=github)](https://github.com/MERAJ-droid/AirSight)
 
