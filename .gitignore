@@ -45,6 +45,10 @@ kaggle.json
 output.png
 output.jpg
 
+# ── RAG source PDFs (vectorstore already built + hosted on HF Hub) ───────────
+# These are only needed locally to re-run ingest.py — not needed at runtime
+src/rag/documents/*.pdf
+
 # ── Planning & internal docs (not for public repo) ───────
 AIRSIGHT_STATUS.md
 FURTHER_PLANS.md
